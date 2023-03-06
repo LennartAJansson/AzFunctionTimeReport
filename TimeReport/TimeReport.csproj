@@ -22,7 +22,9 @@
 		</PackageReference>
 	</ItemGroup>
 	<ItemGroup>
+		<ProjectReference Include="..\TimeReport.Contract\TimeReport.Contract.csproj" />
 		<ProjectReference Include="..\TimeReport.Data\TimeReport.Data.csproj" />
+		<ProjectReference Include="..\TimeReport.Mediators\TimeReport.Mediators.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Update="host.json">

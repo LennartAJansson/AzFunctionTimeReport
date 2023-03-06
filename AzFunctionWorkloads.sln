@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimeReport.Model", "TimeRep
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimeReport", "TimeReport\TimeReport.csproj", "{F2DCFC9C-779E-480A-870B-3603B924F0FD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeReport.Mediators", "TimeReport.Mediators\TimeReport.Mediators.csproj", "{55727A0F-C24B-4968-8700-1301F4A8301A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{F2DCFC9C-779E-480A-870B-3603B924F0FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F2DCFC9C-779E-480A-870B-3603B924F0FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F2DCFC9C-779E-480A-870B-3603B924F0FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55727A0F-C24B-4968-8700-1301F4A8301A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55727A0F-C24B-4968-8700-1301F4A8301A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55727A0F-C24B-4968-8700-1301F4A8301A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55727A0F-C24B-4968-8700-1301F4A8301A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

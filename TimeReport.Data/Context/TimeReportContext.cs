@@ -1,6 +1,7 @@
 ﻿namespace TimeReport.Data.Context;
 using Microsoft.EntityFrameworkCore;
-using TimeReport.Data.Interface;
+
+using TimeReport.Data.Interfaces;
 using TimeReport.Model;
 
 public sealed class TimeReportContext : DbContext, ITimeReportContext

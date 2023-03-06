@@ -1,5 +1,6 @@
-﻿namespace TimeReport.Data.Interface;
+﻿namespace TimeReport.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
+
 using TimeReport.Model;
 
 public interface ITimeReportContext : IDbContext

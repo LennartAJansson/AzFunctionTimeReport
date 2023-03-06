@@ -1,7 +1,8 @@
-﻿namespace TimeReport.Data.Service;
+﻿namespace TimeReport.Data.Services;
 using Microsoft.Extensions.Logging;
+
 using TimeReport.Data.Context;
-using TimeReport.Data.Interface;
+using TimeReport.Data.Interfaces;
 using TimeReport.Model;
 
 public sealed class TimeReportService : ITimeReportService
@@ -20,15 +21,16 @@ public sealed class TimeReportService : ITimeReportService
     {
         _ = context.Add(person);
         _ = await context.SaveChangesAsync();
+
         return person;
     }
 
-    public async Task<IEnumerable<Person>> GetPeople()
+    public async Task<IEnumerable<Person>> ReadPeople()
     {
         return await GetAll<Person>();
     }
 
-    public async Task<Person?> GetPerson(int id)
+    public async Task<Person?> ReadPerson(int id)
     {
         return await GetById<Person>(id);
     }
@@ -61,15 +63,16 @@ public sealed class TimeReportService : ITimeReportService
     {
         _ = context.Add(customer);
         _ = await context.SaveChangesAsync();
+
         return customer;
     }
 
-    public async Task<IEnumerable<Customer>> GetCustomers()
+    public async Task<IEnumerable<Customer>> ReadCustomers()
     {
         return await GetAll<Customer>();
     }
 
-    public async Task<Customer?> GetCustomer(int id)
+    public async Task<Customer?> ReadCustomer(int id)
     {
         return await GetById<Customer>(id);
     }
@@ -106,14 +109,28 @@ public sealed class TimeReportService : ITimeReportService
         return workload;
     }
 
-    public async Task<IEnumerable<Workload>> GetWorkloads()
+    public async Task<IEnumerable<Workload>> ReadWorkloads()
     {
+        //TODO ReadWorkloads
         return await GetAll<Workload>();
     }
 
-    public async Task<Workload?> GetWorkload(int id)
+    public async Task<Workload?> ReadWorkload(int id)
     {
+        //TODO ReadWorkload
         return await GetById<Workload>(id);
+    }
+
+    public async Task<IEnumerable<Workload>> ReadWorkloadsByPerson(int personId)
+    {
+        //TODO ReadWorkloadByPerson
+        return (await GetAll<Workload>()).Where(w=>w.PersonId==personId);
+    }
+
+    public async Task<IEnumerable<Workload>> ReadWorkloadsByCustomer(int customerId)
+    {
+        //TODO ReadWorkloadByCustomer
+        return (await GetAll<Workload>()).Where(w=>w.CustomerId==customerId);
     }
 
     public async Task<Workload> UpdateWorkload(Workload workload)

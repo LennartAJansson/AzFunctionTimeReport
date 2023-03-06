@@ -16,6 +16,7 @@ var host = new HostBuilder()
         services
             .AddTimeReportPersistance(context.Configuration.GetConnectionString("TimeReportDb")
             ?? throw new ArgumentException("ConnectionString \"TimeReportDb\" is missing in configuration"));
+        services.AddMediators();
     })
     .Build();
 

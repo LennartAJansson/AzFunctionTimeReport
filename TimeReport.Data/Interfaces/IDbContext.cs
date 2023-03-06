@@ -1,5 +1,9 @@
-﻿namespace TimeReport.Data.Interface;
+﻿namespace TimeReport.Data.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.CodeAnalysis;
+
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 //Use this interface to hide the implementation of the DbContext
 //Only expose the things that are needed outside your own TimeReportContext
@@ -10,6 +14,7 @@ public interface IDbContext
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default);
 
+    DbSet<TEntity> Set<TEntity>() where TEntity : class;
     EntityEntry<TEntity> Add<TEntity>(TEntity entity) where TEntity : class;
     EntityEntry<TEntity> Attach<TEntity>(TEntity entity) where TEntity : class;
     EntityEntry<TEntity> Update<TEntity>(TEntity entity) where TEntity : class;

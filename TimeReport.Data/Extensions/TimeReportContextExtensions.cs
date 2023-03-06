@@ -1,10 +1,10 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection;
 
 using Microsoft.EntityFrameworkCore;
-using TimeReport.Data.Context;
-using TimeReport.Data.Interface;
 
-using TimeReport.Data.Service;
+using TimeReport.Data.Context;
+using TimeReport.Data.Interfaces;
+using TimeReport.Data.Services;
 
 public static class TimeReportContextExtensions
 {
@@ -12,7 +12,7 @@ public static class TimeReportContextExtensions
     {
         services.AddDbContext<ITimeReportContext, TimeReportContext>(options => options.UseSqlServer(connectionString));
         services.AddTransient<ITimeReportService, TimeReportService>();
-        
+
         return services;
     }
 }
