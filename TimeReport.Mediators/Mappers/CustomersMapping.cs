@@ -17,6 +17,8 @@ public class CustomersMapping : Profile
         CreateMap<UpdateCustomerCommand, Customer>();
 
         CreateMap<Customer, CustomerResponse>();
-        CreateMap<Customer, CustomerFullResponse>();
+        CreateMap<Customer, CustomerFullResponse>()
+            .BeforeMap((src, dest) => { })
+            .AfterMap((src, dest) => { }); ;
     }
 }

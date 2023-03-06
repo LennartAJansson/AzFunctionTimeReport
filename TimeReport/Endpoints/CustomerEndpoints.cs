@@ -22,10 +22,12 @@ using TimeReport.Model;
 public sealed class CustomerEndpoints
 {
     private readonly ILogger<CustomerEndpoints> logger;
+    private readonly IMediator mediator;
 
-    public CustomerEndpoints(ILogger<CustomerEndpoints> logger)
+    public CustomerEndpoints(ILogger<CustomerEndpoints> logger, IMediator mediator)
     {
         this.logger = logger;
+        this.mediator = mediator;
     }
 
     [OpenApiOperation(operationId: "ReadCustomers", tags: new[] { "Customers" }, Summary = "ReadCustomers", Description = "This shows a welcome message.", Visibility = OpenApiVisibilityType.Important)]
@@ -33,8 +35,7 @@ public sealed class CustomerEndpoints
     [OpenApiResponseWithoutBody(HttpStatusCode.NotFound)]
     [Function("ReadCustomers")]
     public async Task<IActionResult> ReadCustomers(
-        [HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req,
-        IMediator mediator)
+        [HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req)
     {
         IEnumerable<CustomerResponse> response = await mediator.Send(new ReadCustomersQuery());
 
@@ -47,8 +48,7 @@ public sealed class CustomerEndpoints
     [OpenApiResponseWithoutBody(HttpStatusCode.NotFound)]
     [Function("ReadCustomer")]
     public async Task<IActionResult> ReadCustomer(
-        [HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req,
-        IMediator mediator)
+        [HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req)
     {
         if (!int.TryParse(req.Query("id"), out int id))
         {
@@ -65,8 +65,7 @@ public sealed class CustomerEndpoints
     [OpenApiResponseWithoutBody(HttpStatusCode.BadRequest)]
     [Function("CreateCustomer")]
     public async Task<IActionResult> CreateCustomer(
-        [HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req,
-        IMediator mediator)
+        [HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req)
     {
         if (req.Body.Length > 0)
         {
@@ -89,8 +88,7 @@ public sealed class CustomerEndpoints
     [OpenApiResponseWithoutBody(HttpStatusCode.BadRequest)]
     [Function("UpdateCustomer")]
     public async Task<IActionResult> UpdateCustomer(
-        [HttpTrigger(AuthorizationLevel.Function, "put")] HttpRequestData req,
-        IMediator mediator)
+        [HttpTrigger(AuthorizationLevel.Function, "put")] HttpRequestData req)
     {
         if (req.Body.Length > 0)
         {
@@ -112,8 +110,7 @@ public sealed class CustomerEndpoints
     [OpenApiResponseWithoutBody(HttpStatusCode.NotFound)]
     [Function("DeleteCustomer")]
     public async Task<IActionResult> DeleteCustomer(
-        [HttpTrigger(AuthorizationLevel.Function, "delete")] HttpRequestData req,
-        IMediator mediator)
+        [HttpTrigger(AuthorizationLevel.Function, "delete")] HttpRequestData req)
     {
         if (!int.TryParse(req.Query("id"), out int id))
         {

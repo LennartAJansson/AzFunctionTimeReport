@@ -20,10 +20,12 @@ using TimeReport.Model;
 public sealed class PersonEndpoints
 {
     private readonly ILogger<PersonEndpoints> logger;
+    private readonly IMediator mediator;
 
-    public PersonEndpoints(ILogger<PersonEndpoints> logger)
+    public PersonEndpoints(ILogger<PersonEndpoints> logger,IMediator mediator)
     {
         this.logger = logger;
+        this.mediator = mediator;
     }
 
     [OpenApiOperation(operationId: "ReadPeople", tags: new[] { "People" }, Summary = "ReadPeople", Description = "This shows a welcome message.", Visibility = OpenApiVisibilityType.Important)]
@@ -31,8 +33,7 @@ public sealed class PersonEndpoints
     [OpenApiResponseWithoutBody(HttpStatusCode.NotFound)]
     [Function("ReadPeople")]
     public async Task<IActionResult> ReadPeople(
-        [HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req,
-        IMediator mediator)
+        [HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req)
     {
         IEnumerable<PersonResponse>? response = await mediator.Send(new ReadPeopleQuery());
 
@@ -45,8 +46,7 @@ public sealed class PersonEndpoints
     [OpenApiResponseWithoutBody(HttpStatusCode.NotFound)]
     [Function("ReadPerson")]
     public async Task<IActionResult> ReadPerson(
-        [HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req,
-        IMediator mediator)
+        [HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req)
     {
         if (!int.TryParse(req.Query("id"), out int id))
         {
@@ -63,8 +63,7 @@ public sealed class PersonEndpoints
     [OpenApiResponseWithoutBody(HttpStatusCode.BadRequest)]
     [Function("CreatePerson")]
     public async Task<IActionResult> CreatePerson(
-        [HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req,
-        IMediator mediator)
+        [HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req)
     {
         if (req.Body.Length > 0)
         {
@@ -87,8 +86,7 @@ public sealed class PersonEndpoints
     [OpenApiResponseWithoutBody(HttpStatusCode.BadRequest)]
     [Function("UpdatePerson")]
     public async Task<IActionResult> UpdatePerson(
-        [HttpTrigger(AuthorizationLevel.Function, "put")] HttpRequestData req,
-        IMediator mediator)
+        [HttpTrigger(AuthorizationLevel.Function, "put")] HttpRequestData req)
     {
         if (req.Body.Length > 0)
         {
@@ -110,8 +108,7 @@ public sealed class PersonEndpoints
     [OpenApiResponseWithoutBody(HttpStatusCode.NotFound)]
     [Function("DeletePerson")]
     public async Task<IActionResult> DeletePerson(
-        [HttpTrigger(AuthorizationLevel.Function, "delete")] HttpRequestData req,
-        IMediator mediator)
+        [HttpTrigger(AuthorizationLevel.Function, "delete")] HttpRequestData req)
     {
         if (!int.TryParse(req.Query("id"), out int id))
         {

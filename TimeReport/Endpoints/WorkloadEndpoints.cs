@@ -22,10 +22,12 @@ using TimeReport.Model;
 public sealed class WorkloadEndpoints
 {
     private readonly ILogger<WorkloadEndpoints> logger;
+    private readonly IMediator mediator;
 
-    public WorkloadEndpoints(ILogger<WorkloadEndpoints> logger)
+    public WorkloadEndpoints(ILogger<WorkloadEndpoints> logger, IMediator mediator)
     {
         this.logger = logger;
+        this.mediator = mediator;
     }
 
     [OpenApiOperation(operationId: "ReadWorkloads", tags: new[] { "Workloads" }, Summary = "ReadWorkloads", Description = "This shows a welcome message.", Visibility = OpenApiVisibilityType.Important)]
@@ -33,8 +35,7 @@ public sealed class WorkloadEndpoints
     [OpenApiResponseWithoutBody(HttpStatusCode.NotFound)]
     [Function("ReadWorkloads")]
     public async Task<IActionResult> ReadWorkloads(
-        [HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req,
-        IMediator mediator)
+        [HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req)
     {
         IEnumerable<WorkloadResponse> response = await mediator.Send(new ReadWorkloadsQuery());
 
@@ -47,8 +48,7 @@ public sealed class WorkloadEndpoints
     [OpenApiResponseWithoutBody(HttpStatusCode.NotFound)]
     [Function("ReadWorkload")]
     public async Task<IActionResult> ReadWorkload(
-        [HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req,
-        IMediator mediator)
+        [HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req)
     {
         if (!int.TryParse(req.Query("id"), out int id))
         {
@@ -65,8 +65,7 @@ public sealed class WorkloadEndpoints
     [OpenApiResponseWithoutBody(HttpStatusCode.BadRequest)]
     [Function("CreateWorkload")]
     public async Task<IActionResult> CreateWorkload(
-        [HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req,
-        IMediator mediator)
+        [HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req)
     {
         if (req.Body.Length > 0)
         {
@@ -89,8 +88,7 @@ public sealed class WorkloadEndpoints
     [OpenApiResponseWithoutBody(HttpStatusCode.BadRequest)]
     [Function("UpdateWorkload")]
     public async Task<IActionResult> UpdateWorkload(
-        [HttpTrigger(AuthorizationLevel.Function, "put")] HttpRequestData req,
-        IMediator mediator)
+        [HttpTrigger(AuthorizationLevel.Function, "put")] HttpRequestData req)
     {
         if (req.Body.Length > 0)
         {
@@ -112,8 +110,7 @@ public sealed class WorkloadEndpoints
     [OpenApiResponseWithoutBody(HttpStatusCode.NotFound)]
     [Function("DeleteWorkload")]
     public async Task<IActionResult> DeleteWorkload(
-        [HttpTrigger(AuthorizationLevel.Function, "delete")] HttpRequestData req,
-        IMediator mediator)
+        [HttpTrigger(AuthorizationLevel.Function, "delete")] HttpRequestData req)
     {
         if (!int.TryParse(req.Query("id"), out int id))
         {

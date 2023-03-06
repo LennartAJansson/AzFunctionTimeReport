@@ -1,4 +1,6 @@
 ﻿namespace TimeReport.Data.Services;
+
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 using TimeReport.Data.Context;
@@ -72,9 +74,11 @@ public sealed class TimeReportService : ITimeReportService
         return await GetAll<Customer>();
     }
 
-    public async Task<Customer?> ReadCustomer(int id)
+    public Task<Customer?> ReadCustomer(int id)
     {
-        return await GetById<Customer>(id);
+        var customer = context.Customers.FirstOrDefault(p => p.Id == id);
+        return Task.FromResult(customer);
+        //return await GetById<Customer>(id);
     }
 
     public async Task<Customer> UpdateCustomer(Customer customer)
