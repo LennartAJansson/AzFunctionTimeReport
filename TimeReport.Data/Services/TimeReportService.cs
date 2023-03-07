@@ -20,8 +20,8 @@ public sealed class TimeReportService : ITimeReportService
     #region People
     public async Task<Person> CreatePersonAsync(Person person)
     {
-            _ = context.Add(person);
-            int i = await context.SaveChangesAsync();
+        _ = context.Add(person);
+        _ = await context.SaveChangesAsync();
 
         return person;
     }
