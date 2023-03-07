@@ -18,23 +18,10 @@ public sealed class TimeReportService : ITimeReportService
     }
 
     #region People
-    public async Task<Person?> CreatePersonAsync(Person person)
+    public async Task<Person> CreatePersonAsync(Person person)
     {
-        try
-        {
             _ = context.Add(person);
-            var i = await context.SaveChangesAsync();
-            if (i == 0)
-            {
-                return null;
-            }
-
-        }
-        catch (Exception ex)
-        {
-            logger.LogError("Error when saving new person", ex);
-            return null;
-        }
+            int i = await context.SaveChangesAsync();
 
         return person;
     }
@@ -187,6 +174,11 @@ public sealed class TimeReportService : ITimeReportService
         }
 
         return workload;
+    }
+
+    public Task<Person?> CreatePerson(Person person)
+    {
+        throw new NotImplementedException();
     }
 
     #endregion
