@@ -3,26 +3,38 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-using TimeReport.Data.Context;
 using TimeReport.Data.Interfaces;
 using TimeReport.Model;
 
 public sealed class TimeReportService : ITimeReportService
 {
     private readonly ILogger<TimeReportService> logger;
-    private readonly TimeReportContext context;
+    private readonly ITimeReportContext context;
 
-    public TimeReportService(ILogger<TimeReportService> logger, TimeReportContext context)
+    public TimeReportService(ILogger<TimeReportService> logger, ITimeReportContext context)
     {
         this.logger = logger;
         this.context = context;
     }
 
     #region People
-    public async Task<Person> CreatePerson(Person person)
+    public async Task<Person?> CreatePersonAsync(Person person)
     {
-        _ = context.Add(person);
-        _ = await context.SaveChangesAsync();
+        try
+        {
+            _ = context.Add(person);
+            var i = await context.SaveChangesAsync();
+            if (i == 0)
+            {
+                return null;
+            }
+
+        }
+        catch (Exception ex)
+        {
+            logger.LogError("Error when saving new person", ex);
+            return null;
+        }
 
         return person;
     }
@@ -136,18 +148,18 @@ public sealed class TimeReportService : ITimeReportService
 
     public Task<IEnumerable<Workload>> ReadWorkloadsByPerson(int personId)
     {
-        var workloads = context.Workloads
+        IEnumerable<Workload> workloads = context.Workloads
             .Include("Person")
             .Include("Customer")
             .Where(w => w.PersonId == personId)
             .AsEnumerable();
-        
+
         return Task.FromResult(workloads);
     }
 
     public Task<IEnumerable<Workload>> ReadWorkloadsByCustomer(int customerId)
     {
-        var workloads = context.Workloads
+        IEnumerable<Workload> workloads = context.Workloads
             .Include("Person")
             .Include("Customer")
             .Where(w => w.CustomerId == customerId)
@@ -178,9 +190,4 @@ public sealed class TimeReportService : ITimeReportService
     }
 
     #endregion
-
-    private Task<IEnumerable<T>> GetAll<T>() where T : Entity
-    {
-        return Task.FromResult(context.Set<T>().AsEnumerable());
-    }
 }

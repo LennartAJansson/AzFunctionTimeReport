@@ -98,13 +98,13 @@ namespace TimeReport.Data.Migrations
             modelBuilder.Entity("TimeReport.Model.Workload", b =>
                 {
                     b.HasOne("TimeReport.Model.Customer", "Customer")
-                        .WithMany()
+                        .WithMany("Workloads")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TimeReport.Model.Person", "Person")
-                        .WithMany()
+                        .WithMany("Workloads")
                         .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -112,6 +112,16 @@ namespace TimeReport.Data.Migrations
                     b.Navigation("Customer");
 
                     b.Navigation("Person");
+                });
+
+            modelBuilder.Entity("TimeReport.Model.Customer", b =>
+                {
+                    b.Navigation("Workloads");
+                });
+
+            modelBuilder.Entity("TimeReport.Model.Person", b =>
+                {
+                    b.Navigation("Workloads");
                 });
 #pragma warning restore 612, 618
         }

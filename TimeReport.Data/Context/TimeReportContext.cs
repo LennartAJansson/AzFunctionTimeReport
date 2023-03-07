@@ -13,6 +13,7 @@ public sealed class TimeReportContext : DbContext, ITimeReportContext
     public TimeReportContext(DbContextOptions<TimeReportContext> options)
         : base(options)
     { }
+
     //OnConfiguring
     //OnModelCreating
 

@@ -6,7 +6,7 @@ public interface ITimeReportService
 {
     Task<Person?> ReadPerson(int id);
     Task<IEnumerable<Person>> ReadPeople();
-    Task<Person> CreatePerson(Person person);
+    Task<Person?> CreatePerson(Person person);
     Task<Person> UpdatePerson(Person person);
     Task<Person?> DeletePerson(int id);
     Task<Customer?> ReadCustomer(int id);

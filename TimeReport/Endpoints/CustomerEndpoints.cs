@@ -17,7 +17,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
 using TimeReport.Contract;
-using TimeReport.Model;
 
 public sealed class CustomerEndpoints
 {
@@ -32,7 +31,7 @@ public sealed class CustomerEndpoints
 
     [OpenApiOperation(operationId: "CreateCustomer", tags: new[] { "Customers" }, Summary = "CreateCustomer", Description = "This shows a welcome message.", Visibility = OpenApiVisibilityType.Important)]
     [OpenApiRequestBody("application/json", typeof(CreateCustomerCommand))]
-    [OpenApiResponseWithBody(HttpStatusCode.Created, "application/json", typeof(CustomerResponse))]
+    [OpenApiResponseWithBody(HttpStatusCode.OK, "application/json", typeof(CustomerResponse))]
     [OpenApiResponseWithoutBody(HttpStatusCode.BadRequest)]
     [Function("CreateCustomer")]
     public async Task<IActionResult> CreateCustomer(

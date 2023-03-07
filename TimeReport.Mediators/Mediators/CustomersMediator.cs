@@ -30,7 +30,9 @@ public class CustomersMediator :
     public async Task<CustomerResponse> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
     {
         var customer = mapper.Map<Customer>(request);
+
         customer = await service.CreateCustomer(customer);
+
         var response = mapper.Map<CustomerResponse>(customer);
 
         return response;
