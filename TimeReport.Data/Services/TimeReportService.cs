@@ -27,14 +27,18 @@ public sealed class TimeReportService : ITimeReportService
         return person;
     }
 
-    public async Task<IEnumerable<Person>> ReadPeople()
+    public Task<IEnumerable<Person>> ReadPeople()
     {
-        return await GetAll<Person>();
+        return Task.FromResult(context.People.AsEnumerable());
     }
 
-    public async Task<Person?> ReadPerson(int id)
+    public Task<Person?> ReadPerson(int id)
     {
-        return await GetById<Person>(id);
+        Person? person = context.People
+            .Include("Workloads")
+            .FirstOrDefault(p => p.Id == id);
+
+        return Task.FromResult(person);
     }
 
     public async Task<Person> UpdatePerson(Person person)
@@ -69,16 +73,18 @@ public sealed class TimeReportService : ITimeReportService
         return customer;
     }
 
-    public async Task<IEnumerable<Customer>> ReadCustomers()
+    public Task<IEnumerable<Customer>> ReadCustomers()
     {
-        return await GetAll<Customer>();
+        return Task.FromResult(context.Customers.AsEnumerable());
     }
 
     public Task<Customer?> ReadCustomer(int id)
     {
-        var customer = context.Customers.FirstOrDefault(p => p.Id == id);
+        Customer? customer = context.Customers
+            .Include("Workloads")
+            .FirstOrDefault(p => p.Id == id);
+
         return Task.FromResult(customer);
-        //return await GetById<Customer>(id);
     }
 
     public async Task<Customer> UpdateCustomer(Customer customer)
@@ -113,28 +119,41 @@ public sealed class TimeReportService : ITimeReportService
         return workload;
     }
 
-    public async Task<IEnumerable<Workload>> ReadWorkloads()
+    public Task<IEnumerable<Workload>> ReadWorkloads()
     {
-        //TODO ReadWorkloads
-        return await GetAll<Workload>();
+        return Task.FromResult(context.Workloads.AsEnumerable());
     }
 
-    public async Task<Workload?> ReadWorkload(int id)
+    public Task<Workload?> ReadWorkload(int id)
     {
-        //TODO ReadWorkload
-        return await GetById<Workload>(id);
+        Workload? workload = context.Workloads
+            .Include("Person")
+            .Include("Customer")
+            .FirstOrDefault(p => p.Id == id);
+
+        return Task.FromResult(workload);
     }
 
-    public async Task<IEnumerable<Workload>> ReadWorkloadsByPerson(int personId)
+    public Task<IEnumerable<Workload>> ReadWorkloadsByPerson(int personId)
     {
-        //TODO ReadWorkloadByPerson
-        return (await GetAll<Workload>()).Where(w=>w.PersonId==personId);
+        var workloads = context.Workloads
+            .Include("Person")
+            .Include("Customer")
+            .Where(w => w.PersonId == personId)
+            .AsEnumerable();
+        
+        return Task.FromResult(workloads);
     }
 
-    public async Task<IEnumerable<Workload>> ReadWorkloadsByCustomer(int customerId)
+    public Task<IEnumerable<Workload>> ReadWorkloadsByCustomer(int customerId)
     {
-        //TODO ReadWorkloadByCustomer
-        return (await GetAll<Workload>()).Where(w=>w.CustomerId==customerId);
+        var workloads = context.Workloads
+            .Include("Person")
+            .Include("Customer")
+            .Where(w => w.CustomerId == customerId)
+            .AsEnumerable();
+
+        return Task.FromResult(workloads);
     }
 
     public async Task<Workload> UpdateWorkload(Workload workload)
@@ -159,11 +178,6 @@ public sealed class TimeReportService : ITimeReportService
     }
 
     #endregion
-
-    private Task<T?> GetById<T>(int id) where T : Entity
-    {
-        return Task.FromResult(context.Set<T>().FirstOrDefault(p => p.Id == id));
-    }
 
     private Task<IEnumerable<T>> GetAll<T>() where T : Entity
     {

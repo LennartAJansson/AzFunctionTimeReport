@@ -28,6 +28,28 @@ public sealed class PersonEndpoints
         this.mediator = mediator;
     }
 
+    [OpenApiOperation(operationId: "CreatePerson", tags: new[] { "People" }, Summary = "CreatePerson", Description = "This shows a welcome message.", Visibility = OpenApiVisibilityType.Important)]
+    [OpenApiRequestBody("application/json", typeof(CreatePersonCommand))]
+    [OpenApiResponseWithBody(HttpStatusCode.Created, "application/json", typeof(PersonResponse))]
+    [OpenApiResponseWithoutBody(HttpStatusCode.BadRequest)]
+    [Function("CreatePerson")]
+    public async Task<IActionResult> CreatePerson(
+        [HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req)
+    {
+        if (req.Body.Length > 0)
+        {
+            JsonSerializerOptions options = new() { PropertyNameCaseInsensitive = true };
+            CreatePersonCommand? request = JsonSerializer.Deserialize<CreatePersonCommand>(req.Body, options);
+            if (request is not null)
+            {
+                PersonResponse response = await mediator.Send(request);
+                return new OkObjectResult(response);
+            }
+        }
+
+        return new BadRequestResult();
+    }
+
     [OpenApiOperation(operationId: "ReadPeople", tags: new[] { "People" }, Summary = "ReadPeople", Description = "This shows a welcome message.", Visibility = OpenApiVisibilityType.Important)]
     [OpenApiResponseWithBody(HttpStatusCode.OK, "application/json", typeof(IEnumerable<PersonResponse>))]
     [OpenApiResponseWithoutBody(HttpStatusCode.NotFound)]
@@ -57,33 +79,10 @@ public sealed class PersonEndpoints
         return response is not null ? new OkObjectResult(response) : new NotFoundResult();
     }
 
-    [OpenApiOperation(operationId: "CreatePerson", tags: new[] { "People" }, Summary = "CreatePerson", Description = "This shows a welcome message.", Visibility = OpenApiVisibilityType.Important)]
-    [OpenApiRequestBody("application/json", typeof(CreatePersonCommand))]
-    [OpenApiResponseWithBody(HttpStatusCode.Created, "application/json", typeof(PersonResponse))]
-    [OpenApiResponseWithoutBody(HttpStatusCode.BadRequest)]
-    [Function("CreatePerson")]
-    public async Task<IActionResult> CreatePerson(
-        [HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req)
-    {
-        if (req.Body.Length > 0)
-        {
-            JsonSerializerOptions options = new() { PropertyNameCaseInsensitive = true };
-            CreatePersonCommand? request = JsonSerializer.Deserialize<CreatePersonCommand>(req.Body, options);
-            if (request is not null)
-            {
-                PersonResponse response = await mediator.Send(request);
-                return new OkObjectResult(response);
-            }
-        }
-
-        return new BadRequestResult();
-    }
-
-
     [OpenApiOperation(operationId: "UpdatePerson", tags: new[] { "People" }, Summary = "UpdatePerson", Description = "This shows a welcome message.", Visibility = OpenApiVisibilityType.Important)]
     [OpenApiRequestBody("application/json", typeof(UpdatePersonCommand))]
-    [OpenApiResponseWithBody(HttpStatusCode.Created, "application/json", typeof(PersonResponse))]
-    [OpenApiResponseWithoutBody(HttpStatusCode.BadRequest)]
+    [OpenApiResponseWithBody(HttpStatusCode.OK, "application/json", typeof(PersonResponse))]
+    [OpenApiResponseWithoutBody(HttpStatusCode.NotFound)]
     [Function("UpdatePerson")]
     public async Task<IActionResult> UpdatePerson(
         [HttpTrigger(AuthorizationLevel.Function, "put")] HttpRequestData req)
@@ -99,7 +98,7 @@ public sealed class PersonEndpoints
             }
         }
 
-        return new BadRequestResult();
+        return new NotFoundResult();
     }
 
     [OpenApiOperation(operationId: "DeletePerson", tags: new[] { "People" }, Summary = "DeletePerson", Description = "This shows a welcome message.", Visibility = OpenApiVisibilityType.Important)]

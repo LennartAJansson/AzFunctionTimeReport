@@ -72,7 +72,7 @@ public class WorkloadsMediator :
 
     public async Task<IEnumerable<WorkloadFullResponse>> Handle(ReadWorkloadsByCustomerQuery request, CancellationToken cancellationToken)
     {
-        var workloads = await service.ReadWorkloadsByPerson(request.CustomerId);
+        var workloads = await service.ReadWorkloadsByCustomer(request.CustomerId);
         var response = workloads.Select(mapper.Map<WorkloadFullResponse>);
 
         return response;

@@ -30,6 +30,28 @@ public sealed class CustomerEndpoints
         this.mediator = mediator;
     }
 
+    [OpenApiOperation(operationId: "CreateCustomer", tags: new[] { "Customers" }, Summary = "CreateCustomer", Description = "This shows a welcome message.", Visibility = OpenApiVisibilityType.Important)]
+    [OpenApiRequestBody("application/json", typeof(CreateCustomerCommand))]
+    [OpenApiResponseWithBody(HttpStatusCode.Created, "application/json", typeof(CustomerResponse))]
+    [OpenApiResponseWithoutBody(HttpStatusCode.BadRequest)]
+    [Function("CreateCustomer")]
+    public async Task<IActionResult> CreateCustomer(
+        [HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req)
+    {
+        if (req.Body.Length > 0)
+        {
+            JsonSerializerOptions options = new() { PropertyNameCaseInsensitive = true };
+            CreateCustomerCommand? request = JsonSerializer.Deserialize<CreateCustomerCommand>(req.Body, options);
+            if (request is not null)
+            {
+                CustomerResponse response = await mediator.Send(request);
+                return new OkObjectResult(response);
+            }
+        }
+
+        return new BadRequestResult();
+    }
+
     [OpenApiOperation(operationId: "ReadCustomers", tags: new[] { "Customers" }, Summary = "ReadCustomers", Description = "This shows a welcome message.", Visibility = OpenApiVisibilityType.Important)]
     [OpenApiResponseWithBody(HttpStatusCode.OK, "application/json", typeof(IEnumerable<CustomerResponse>))]
     [OpenApiResponseWithoutBody(HttpStatusCode.NotFound)]
@@ -59,33 +81,10 @@ public sealed class CustomerEndpoints
         return response is not null ? new OkObjectResult(response) : new NotFoundResult();
     }
 
-    [OpenApiOperation(operationId: "CreateCustomer", tags: new[] { "Customers" }, Summary = "CreateCustomer", Description = "This shows a welcome message.", Visibility = OpenApiVisibilityType.Important)]
-    [OpenApiRequestBody("application/json", typeof(CreateCustomerCommand))]
-    [OpenApiResponseWithBody(HttpStatusCode.Created, "application/json", typeof(CustomerResponse))]
-    [OpenApiResponseWithoutBody(HttpStatusCode.BadRequest)]
-    [Function("CreateCustomer")]
-    public async Task<IActionResult> CreateCustomer(
-        [HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req)
-    {
-        if (req.Body.Length > 0)
-        {
-            JsonSerializerOptions options = new() { PropertyNameCaseInsensitive = true };
-            CreateCustomerCommand? request = JsonSerializer.Deserialize<CreateCustomerCommand>(req.Body, options);
-            if (request is not null)
-            {
-                CustomerResponse response = await mediator.Send(request);
-                return new OkObjectResult(response);
-            }
-        }
-
-        return new BadRequestResult();
-    }
-
-
     [OpenApiOperation(operationId: "UpdateCustomer", tags: new[] { "Customers" }, Summary = "UpdateCustomer", Description = "This shows a welcome message.", Visibility = OpenApiVisibilityType.Important)]
     [OpenApiRequestBody("application/json", typeof(UpdateCustomerCommand))]
-    [OpenApiResponseWithBody(HttpStatusCode.Created, "application/json", typeof(CustomerResponse))]
-    [OpenApiResponseWithoutBody(HttpStatusCode.BadRequest)]
+    [OpenApiResponseWithBody(HttpStatusCode.OK, "application/json", typeof(CustomerResponse))]
+    [OpenApiResponseWithoutBody(HttpStatusCode.NotFound)]
     [Function("UpdateCustomer")]
     public async Task<IActionResult> UpdateCustomer(
         [HttpTrigger(AuthorizationLevel.Function, "put")] HttpRequestData req)
@@ -101,7 +100,7 @@ public sealed class CustomerEndpoints
             }
         }
 
-        return new BadRequestResult();
+        return new NotFoundResult();
     }
 
     [OpenApiOperation(operationId: "DeleteCustomer", tags: new[] { "Customers" }, Summary = "DeleteCustomer", Description = "This shows a welcome message.", Visibility = OpenApiVisibilityType.Important)]
