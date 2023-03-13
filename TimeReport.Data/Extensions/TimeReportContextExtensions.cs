@@ -1,4 +1,6 @@
-﻿namespace Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
+
+namespace TimeReport.Data.Extensions;
 
 using Microsoft.EntityFrameworkCore;
 

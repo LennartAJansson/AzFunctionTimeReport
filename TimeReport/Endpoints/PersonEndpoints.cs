@@ -1,7 +1,6 @@
 namespace TimeReport.Endpoints;
 
 using System.Net;
-using System.Text.Json;
 
 using MediatR;
 
@@ -15,14 +14,13 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
 using TimeReport.Contract;
-using TimeReport.Model;
 
-public sealed class PersonEndpoints
+public sealed class PersonEndpoints : BaseHttpFunction
 {
     private readonly ILogger<PersonEndpoints> logger;
     private readonly IMediator mediator;
 
-    public PersonEndpoints(ILogger<PersonEndpoints> logger,IMediator mediator)
+    public PersonEndpoints(ILogger<PersonEndpoints> logger, IMediator mediator)
     {
         this.logger = logger;
         this.mediator = mediator;
@@ -36,18 +34,15 @@ public sealed class PersonEndpoints
     public async Task<IActionResult> CreatePerson(
         [HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req)
     {
-        if (req.Body.Length > 0)
+        CreatePersonCommand? request = await GetFromBody<CreatePersonCommand>(req.Body);
+
+        if (request is null)
         {
-            JsonSerializerOptions options = new() { PropertyNameCaseInsensitive = true };
-            CreatePersonCommand? request = JsonSerializer.Deserialize<CreatePersonCommand>(req.Body, options);
-            if (request is not null)
-            {
-                PersonResponse response = await mediator.Send(request);
-                return new OkObjectResult(response);
-            }
+            return new BadRequestResult();
         }
 
-        return new BadRequestResult();
+        PersonResponse response = await mediator.Send(request);
+        return new OkObjectResult(response);
     }
 
     [OpenApiOperation(operationId: "ReadPeople", tags: new[] { "People" }, Summary = "ReadPeople", Description = "This shows a welcome message.", Visibility = OpenApiVisibilityType.Important)]
@@ -87,18 +82,15 @@ public sealed class PersonEndpoints
     public async Task<IActionResult> UpdatePerson(
         [HttpTrigger(AuthorizationLevel.Function, "put")] HttpRequestData req)
     {
-        if (req.Body.Length > 0)
+        UpdatePersonCommand? request = await GetFromBody<UpdatePersonCommand>(req.Body);
+
+        if (request is null)
         {
-            JsonSerializerOptions options = new() { PropertyNameCaseInsensitive = true };
-            UpdatePersonCommand? request = JsonSerializer.Deserialize<UpdatePersonCommand>(req.Body, options);
-            if (request is not null)
-            {
-                PersonResponse response = await mediator.Send(request);
-                return new OkObjectResult(response);
-            }
+            return new NotFoundResult();
         }
 
-        return new NotFoundResult();
+        PersonResponse response = await mediator.Send(request);
+        return new OkObjectResult(response);
     }
 
     [OpenApiOperation(operationId: "DeletePerson", tags: new[] { "People" }, Summary = "DeletePerson", Description = "This shows a welcome message.", Visibility = OpenApiVisibilityType.Important)]

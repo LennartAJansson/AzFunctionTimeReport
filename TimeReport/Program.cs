@@ -1,8 +1,10 @@
 using Microsoft.Azure.Functions.Worker.Extensions.OpenApi.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+
+using TimeReport.Data.Extensions;
+using TimeReport.Mediators.Extensions;
 
 var host = new HostBuilder()
     .ConfigureAppConfiguration(builder=>builder.AddUserSecrets<Program>())

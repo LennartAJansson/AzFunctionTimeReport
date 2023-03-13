@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 using MediatR;
@@ -18,7 +17,7 @@ using Microsoft.OpenApi.Models;
 
 using TimeReport.Contract;
 
-public sealed class CustomerEndpoints
+public sealed class CustomerEndpoints : BaseHttpFunction
 {
     private readonly ILogger<CustomerEndpoints> logger;
     private readonly IMediator mediator;
@@ -37,18 +36,15 @@ public sealed class CustomerEndpoints
     public async Task<IActionResult> CreateCustomer(
         [HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req)
     {
-        if (req.Body.Length > 0)
+        CreateCustomerCommand? request = await GetFromBody<CreateCustomerCommand>(req.Body);
+
+        if (request is null)
         {
-            JsonSerializerOptions options = new() { PropertyNameCaseInsensitive = true };
-            CreateCustomerCommand? request = JsonSerializer.Deserialize<CreateCustomerCommand>(req.Body, options);
-            if (request is not null)
-            {
-                CustomerResponse response = await mediator.Send(request);
-                return new OkObjectResult(response);
-            }
+            return new BadRequestResult();
         }
 
-        return new BadRequestResult();
+        CustomerResponse response = await mediator.Send(request);
+        return new OkObjectResult(response);
     }
 
     [OpenApiOperation(operationId: "ReadCustomers", tags: new[] { "Customers" }, Summary = "ReadCustomers", Description = "This shows a welcome message.", Visibility = OpenApiVisibilityType.Important)]
@@ -88,34 +84,37 @@ public sealed class CustomerEndpoints
     public async Task<IActionResult> UpdateCustomer(
         [HttpTrigger(AuthorizationLevel.Function, "put")] HttpRequestData req)
     {
-        if (req.Body.Length > 0)
+        UpdateCustomerCommand? request = await GetFromBody<UpdateCustomerCommand>(req.Body);
+
+        if (request is null)
         {
-            JsonSerializerOptions options = new() { PropertyNameCaseInsensitive = true };
-            UpdateCustomerCommand? request = JsonSerializer.Deserialize<UpdateCustomerCommand>(req.Body, options);
-            if (request is not null)
-            {
-                CustomerResponse response = await mediator.Send(request);
-                return new OkObjectResult(response);
-            }
+            return new NotFoundResult();
         }
 
-        return new NotFoundResult();
+        CustomerResponse response = await mediator.Send(request);
+        return new OkObjectResult(response);
     }
 
     [OpenApiOperation(operationId: "DeleteCustomer", tags: new[] { "Customers" }, Summary = "DeleteCustomer", Description = "This shows a welcome message.", Visibility = OpenApiVisibilityType.Important)]
     [OpenApiParameter(name: "id", In = ParameterLocation.Query, Required = true, Type = typeof(int))]
+    [OpenApiParameter(name: "value", In = ParameterLocation.Query, Required = true, Type = typeof(bool))]
     [OpenApiResponseWithBody(HttpStatusCode.OK, "application/json", typeof(CustomerResponse))]
     [OpenApiResponseWithoutBody(HttpStatusCode.NotFound)]
     [Function("DeleteCustomer")]
     public async Task<IActionResult> DeleteCustomer(
         [HttpTrigger(AuthorizationLevel.Function, "delete")] HttpRequestData req)
     {
-        if (!int.TryParse(req.Query("id"), out int id))
+        if (!int.TryParse(req.Query("id"), out int id) ||
+            !bool.TryParse(req.Query("value"), out _))
         {
             return new NotFoundResult();
         }
 
+        bool value = false;
+        _ = !value;
+
         CustomerResponse? response = await mediator.Send(new DeleteCustomerCommand(id));
         return response is not null ? new OkObjectResult(response) : new NotFoundResult();
     }
+
 }

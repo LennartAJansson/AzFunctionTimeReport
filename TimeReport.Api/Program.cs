@@ -1,4 +1,6 @@
 using TimeReport.Api.Endpoints;
+using TimeReport.Data.Extensions;
+using TimeReport.Mediators.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -18,17 +18,12 @@ public sealed class TimeReportService : ITimeReportService
     }
 
     #region People
-    public async Task<Person> CreatePersonAsync(Person person)
+    public async Task<Person> CreatePerson(Person person)
     {
         _ = context.Add(person);
         _ = await context.SaveChangesAsync();
 
         return person;
-    }
-
-    public Task<IEnumerable<Person>> ReadPeople()
-    {
-        return Task.FromResult(context.People.AsEnumerable());
     }
 
     public Task<Person?> ReadPerson(int id)
@@ -40,7 +35,12 @@ public sealed class TimeReportService : ITimeReportService
         return Task.FromResult(person);
     }
 
-    public async Task<Person> UpdatePerson(Person person)
+    public Task<IEnumerable<Person>> ReadPeople()
+    {
+        return Task.FromResult(context.People.AsEnumerable());
+    }
+
+    public async Task<Person?> UpdatePerson(Person person)
     {
         _ = context.Update(person);
         _ = await context.SaveChangesAsync();
@@ -72,11 +72,6 @@ public sealed class TimeReportService : ITimeReportService
         return customer;
     }
 
-    public Task<IEnumerable<Customer>> ReadCustomers()
-    {
-        return Task.FromResult(context.Customers.AsEnumerable());
-    }
-
     public Task<Customer?> ReadCustomer(int id)
     {
         Customer? customer = context.Customers
@@ -86,7 +81,12 @@ public sealed class TimeReportService : ITimeReportService
         return Task.FromResult(customer);
     }
 
-    public async Task<Customer> UpdateCustomer(Customer customer)
+    public Task<IEnumerable<Customer>> ReadCustomers()
+    {
+        return Task.FromResult(context.Customers.AsEnumerable());
+    }
+
+    public async Task<Customer?> UpdateCustomer(Customer customer)
     {
         _ = context.Update(customer);
         _ = await context.SaveChangesAsync();
@@ -118,11 +118,6 @@ public sealed class TimeReportService : ITimeReportService
         return workload;
     }
 
-    public Task<IEnumerable<Workload>> ReadWorkloads()
-    {
-        return Task.FromResult(context.Workloads.AsEnumerable());
-    }
-
     public Task<Workload?> ReadWorkload(int id)
     {
         Workload? workload = context.Workloads
@@ -131,6 +126,11 @@ public sealed class TimeReportService : ITimeReportService
             .FirstOrDefault(p => p.Id == id);
 
         return Task.FromResult(workload);
+    }
+
+    public Task<IEnumerable<Workload>> ReadWorkloads()
+    {
+        return Task.FromResult(context.Workloads.AsEnumerable());
     }
 
     public Task<IEnumerable<Workload>> ReadWorkloadsByPerson(int personId)
@@ -155,7 +155,7 @@ public sealed class TimeReportService : ITimeReportService
         return Task.FromResult(workloads);
     }
 
-    public async Task<Workload> UpdateWorkload(Workload workload)
+    public async Task<Workload?> UpdateWorkload(Workload workload)
     {
         _ = context.Update(workload);
         _ = await context.SaveChangesAsync();
@@ -175,11 +175,5 @@ public sealed class TimeReportService : ITimeReportService
 
         return workload;
     }
-
-    public Task<Person?> CreatePerson(Person person)
-    {
-        throw new NotImplementedException();
-    }
-
     #endregion
 }

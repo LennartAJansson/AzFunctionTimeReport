@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 using MediatR;
@@ -17,9 +16,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
 using TimeReport.Contract;
-using TimeReport.Model;
 
-public sealed class WorkloadEndpoints
+public sealed class WorkloadEndpoints : BaseHttpFunction
 {
     private readonly ILogger<WorkloadEndpoints> logger;
     private readonly IMediator mediator;
@@ -38,18 +36,15 @@ public sealed class WorkloadEndpoints
     public async Task<IActionResult> CreateWorkload(
         [HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req)
     {
-        if (req.Body.Length > 0)
+        CreateWorkloadCommand? request = await GetFromBody<CreateWorkloadCommand>(req.Body);
+
+        if (request is null)
         {
-            JsonSerializerOptions options = new() { PropertyNameCaseInsensitive = true };
-            CreateWorkloadCommand? request = JsonSerializer.Deserialize<CreateWorkloadCommand>(req.Body, options);
-            if (request is not null)
-            {
-                WorkloadResponse response = await mediator.Send(request);
-                return new OkObjectResult(response);
-            }
+            return new BadRequestResult();
         }
 
-        return new BadRequestResult();
+        WorkloadResponse response = await mediator.Send(request);
+        return new OkObjectResult(response);
     }
 
     [OpenApiOperation(operationId: "ReadWorkloads", tags: new[] { "Workloads" }, Summary = "ReadWorkloads", Description = "This shows a welcome message.", Visibility = OpenApiVisibilityType.Important)]
@@ -123,18 +118,15 @@ public sealed class WorkloadEndpoints
     public async Task<IActionResult> UpdateWorkload(
         [HttpTrigger(AuthorizationLevel.Function, "put")] HttpRequestData req)
     {
-        if (req.Body.Length > 0)
+        UpdateWorkloadCommand? request = await GetFromBody<UpdateWorkloadCommand>(req.Body);
+
+        if (request is null)
         {
-            JsonSerializerOptions options = new() { PropertyNameCaseInsensitive = true };
-            UpdateWorkloadCommand? request = JsonSerializer.Deserialize<UpdateWorkloadCommand>(req.Body, options);
-            if (request is not null)
-            {
-                WorkloadResponse response = await mediator.Send(request);
-                return new OkObjectResult(response);
-            }
+            return new NotFoundResult();
         }
 
-        return new NotFoundResult();
+        WorkloadResponse response = await mediator.Send(request);
+        return new OkObjectResult(response);
     }
 
     [OpenApiOperation(operationId: "DeleteWorkload", tags: new[] { "Workloads" }, Summary = "DeleteWorkload", Description = "This shows a welcome message.", Visibility = OpenApiVisibilityType.Important)]
