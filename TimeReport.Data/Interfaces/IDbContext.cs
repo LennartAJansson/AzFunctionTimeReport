@@ -1,9 +1,7 @@
 ﻿namespace TimeReport.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics.CodeAnalysis;
 
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 //Use this interface to hide the implementation of the DbContext
 //Only expose the things that are needed outside your own TimeReportContext

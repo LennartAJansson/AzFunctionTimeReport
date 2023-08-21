@@ -49,7 +49,7 @@ public class CustomersMediator :
 
     public async Task<CustomerResponse> Handle(DeleteCustomerCommand request, CancellationToken cancellationToken)
     {
-        Customer? customer = await service.DeleteCustomer(request.Id);
+        Customer? customer = await service.DeleteCustomer(request.CustomerId);
         CustomerResponse response = mapper.Map<CustomerResponse>(customer);
 
         return response;
@@ -58,20 +58,20 @@ public class CustomersMediator :
     public async Task<IEnumerable<CustomerResponse>> Handle(ReadCustomersQuery request, CancellationToken cancellationToken)
     {
         //Är egentligen en InternalDbSet<Customer>
-        IEnumerable<Customer> customers = await service.ReadCustomers(); 
+        IEnumerable<Customer> customers = await service.ReadCustomers();
 
         //Är en Enumerable<Customer>
         IEnumerable<Customer> test = customers.Select(c => c);
 
         //Är en Enumerable<CustomerResponse>
-        IEnumerable<CustomerResponse> response = customers.Select(mapper.Map<CustomerResponse>); 
+        IEnumerable<CustomerResponse> response = customers.Select(mapper.Map<CustomerResponse>);
 
         return response;
     }
 
     public async Task<CustomerFullResponse> Handle(ReadCustomerQuery request, CancellationToken cancellationToken)
     {
-        Customer? customer = await service.ReadCustomer(request.Id);
+        Customer? customer = await service.ReadCustomer(request.CustomerId);
         CustomerFullResponse response = mapper.Map<CustomerFullResponse>(customer);
 
         return response;

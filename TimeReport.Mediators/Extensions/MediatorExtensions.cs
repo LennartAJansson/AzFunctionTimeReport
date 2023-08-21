@@ -1,5 +1,5 @@
-﻿namespace TimeReport.Mediators.Extensions;
-using Microsoft.Extensions.DependencyInjection;
+﻿//namespace TimeReport.Mediators.Extensions;
+namespace Microsoft.Extensions.DependencyInjection;
 
 public static class MediatorExtensions
 {

@@ -9,10 +9,16 @@ public class WorkloadsMapping : Profile
 {
     public WorkloadsMapping()
     {
+        //Commands:
         CreateMap<CreateWorkloadCommand, Workload>();
-        CreateMap<UpdateWorkloadCommand, Workload>();
+        CreateMap<UpdateWorkloadCommand, Workload>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.WorkloadId));
 
-        CreateMap<Workload, WorkloadResponse>();
-        CreateMap<Workload, WorkloadFullResponse>();
+        //Queries:
+        CreateMap<Workload, WorkloadResponse>()
+            .ForCtorParam("WorkloadId", opt => opt.MapFrom(src => src.Id));
+        CreateMap<Workload, WorkloadFullResponse>()
+            .ForCtorParam("WorkloadId", opt => opt.MapFrom(src => src.Id));
+
     }
 }

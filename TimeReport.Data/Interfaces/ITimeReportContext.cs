@@ -8,4 +8,6 @@ public interface ITimeReportContext : IDbContext
     DbSet<Customer> Customers { get; }
     DbSet<Person> People { get; }
     DbSet<Workload> Workloads { get; }
+
+    //TODO: If needed, add a method to update and seed the database
 }

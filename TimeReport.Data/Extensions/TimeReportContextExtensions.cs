@@ -1,8 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-
-namespace TimeReport.Data.Extensions;
+﻿namespace Microsoft.Extensions.DependencyInjection;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 
 using TimeReport.Data.Context;
 using TimeReport.Data.Interfaces;
@@ -16,5 +15,16 @@ public static class TimeReportContextExtensions
         services.AddTransient<ITimeReportService, TimeReportService>();
 
         return services;
+    }
+
+    public static IHost UpdateTimeReportPersistance(this IHost host)
+    {
+        using IServiceScope scope = host.Services.CreateScope();
+        
+        scope.ServiceProvider
+            .GetRequiredService<TimeReportContext>()
+            .UpdateDb();
+
+        return host;
     }
 }

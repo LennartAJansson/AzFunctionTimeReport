@@ -30,58 +30,58 @@ public class WorkloadsMediator :
     }
     public async Task<WorkloadResponse> Handle(CreateWorkloadCommand request, CancellationToken cancellationToken)
     {
-        var workload = mapper.Map<Workload>(request);
+        Workload workload = mapper.Map<Workload>(request);
         workload = await service.CreateWorkload(workload);
-        var response = mapper.Map<WorkloadResponse>(workload);
+        WorkloadResponse response = mapper.Map<WorkloadResponse>(workload);
 
         return response;
     }
 
     public async Task<WorkloadResponse> Handle(UpdateWorkloadCommand request, CancellationToken cancellationToken)
     {
-        var workload = mapper.Map<Workload>(request);
+        Workload? workload = mapper.Map<Workload>(request);
         workload = await service.UpdateWorkload(workload);
-        var response = mapper.Map<WorkloadResponse>(workload);
+        WorkloadResponse response = mapper.Map<WorkloadResponse>(workload);
 
         return response;
     }
 
     public async Task<WorkloadResponse> Handle(DeleteWorkloadCommand request, CancellationToken cancellationToken)
     {
-        var workload = await service.DeleteWorkload(request.Id);
-        var response = mapper.Map<WorkloadResponse>(workload);
+        Workload? workload = await service.DeleteWorkload(request.WorkloadId);
+        WorkloadResponse response = mapper.Map<WorkloadResponse>(workload);
 
         return response;
     }
 
     public async Task<IEnumerable<WorkloadResponse>> Handle(ReadWorkloadsQuery request, CancellationToken cancellationToken)
     {
-        var workloads = await service.ReadWorkloads();
-        var response = workloads.Select(mapper.Map<WorkloadResponse>);
+        IEnumerable<Workload> workloads = await service.ReadWorkloads();
+        IEnumerable<WorkloadResponse> response = workloads.Select(mapper.Map<WorkloadResponse>);
 
         return response;
     }
 
     public async Task<IEnumerable<WorkloadFullResponse>> Handle(ReadWorkloadsByPersonQuery request, CancellationToken cancellationToken)
     {
-        var workloads = await service.ReadWorkloadsByPerson(request.PersonId);
-        var response = workloads.Select(mapper.Map<WorkloadFullResponse>);
+        IEnumerable<Workload> workloads = await service.ReadWorkloadsByPerson(request.PersonId);
+        IEnumerable<WorkloadFullResponse> response = workloads.Select(mapper.Map<WorkloadFullResponse>);
 
         return response;
     }
 
     public async Task<IEnumerable<WorkloadFullResponse>> Handle(ReadWorkloadsByCustomerQuery request, CancellationToken cancellationToken)
     {
-        var workloads = await service.ReadWorkloadsByCustomer(request.CustomerId);
-        var response = workloads.Select(mapper.Map<WorkloadFullResponse>);
+        IEnumerable<Workload> workloads = await service.ReadWorkloadsByCustomer(request.CustomerId);
+        IEnumerable<WorkloadFullResponse> response = workloads.Select(mapper.Map<WorkloadFullResponse>);
 
         return response;
     }
 
     public async Task<WorkloadFullResponse> Handle(ReadWorkloadQuery request, CancellationToken cancellationToken)
     {
-        var workload = await service.ReadWorkload(request.Id);
-        var response = mapper.Map<WorkloadFullResponse>(workload);
+        Workload? workload = await service.ReadWorkload(request.WorkloadId);
+        WorkloadFullResponse response = mapper.Map<WorkloadFullResponse>(workload);
 
         return response;
     }

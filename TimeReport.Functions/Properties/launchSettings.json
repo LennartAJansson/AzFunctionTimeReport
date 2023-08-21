@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "TimeReport.Functions": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7005",
+      "launchBrowser": true,
+      "launchUrl": "http://localhost:7005/api/swagger/ui"
+    }
+  }
+}

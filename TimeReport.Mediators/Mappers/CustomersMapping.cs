@@ -13,10 +13,15 @@ public class CustomersMapping : Profile
 {
     public CustomersMapping()
     {
+        //Commands:
         CreateMap<CreateCustomerCommand, Customer>();
-        CreateMap<UpdateCustomerCommand, Customer>();
+        CreateMap<UpdateCustomerCommand, Customer>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.CustomerId));
 
-        CreateMap<Customer, CustomerResponse>();
-        CreateMap<Customer, CustomerFullResponse>();
+        //Queries:
+        CreateMap<Customer, CustomerResponse>()
+            .ForCtorParam("CustomerId", opt => opt.MapFrom(src => src.Id));
+        CreateMap<Customer, CustomerFullResponse>()
+            .ForCtorParam("CustomerId", opt => opt.MapFrom(src => src.Id));
     }
 }

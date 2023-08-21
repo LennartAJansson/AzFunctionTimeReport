@@ -9,10 +9,15 @@ public class PeopleMapping : Profile
 {
     public PeopleMapping()
     {
+        //Commands:
         CreateMap<CreatePersonCommand, Person>();
-        CreateMap<UpdatePersonCommand, Person>();
+        CreateMap<UpdatePersonCommand, Person>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.PersonId));
 
-        CreateMap<Person, PersonResponse>();
-        CreateMap<Person, PersonFullResponse>();
+        //Queries:
+        CreateMap<Person, PersonResponse>()
+            .ForCtorParam("PersonId", opt => opt.MapFrom(src => src.Id));
+        CreateMap<Person, PersonFullResponse>()
+            .ForCtorParam("PersonId", opt => opt.MapFrom(src => src.Id));
     }
 }

@@ -8,14 +8,14 @@ using MediatR;
 //    public string? Email { get; set; }
 //}
 
-public record CreatePersonCommand(string? Name, string? Email, string? Address, string? PostalCode, string? City): IRequest<PersonResponse>; 
-public record UpdatePersonCommand(int Id, string? Name, string? Email, string? Address, string? PostalCode, string? City) : IRequest<PersonResponse>;
-public record DeletePersonCommand(int Id): IRequest<PersonResponse>;
+public record CreatePersonCommand(string? Name): IRequest<PersonResponse>; 
+public record UpdatePersonCommand(int PersonId, string? Name) : IRequest<PersonResponse>;
+public record DeletePersonCommand(int PersonId): IRequest<PersonResponse>;
 
 public record CreateCustomerCommand(string? Name) : IRequest<CustomerResponse>;
-public record UpdateCustomerCommand(int Id, string? Name) : IRequest<CustomerResponse>;
-public record DeleteCustomerCommand(int Id) : IRequest<CustomerResponse>;
+public record UpdateCustomerCommand(int CustomerId, string? Name) : IRequest<CustomerResponse>;
+public record DeleteCustomerCommand(int CustomerId) : IRequest<CustomerResponse>;
 
 public record CreateWorkloadCommand(int PersonId, int CustomerId, DateTime Start, DateTime? Stop) : IRequest<WorkloadResponse>;
-public record UpdateWorkloadCommand(int Id, int PersonId, int CustomerId, DateTime Start, DateTime? Stop) : IRequest<WorkloadResponse>;
-public record DeleteWorkloadCommand(int Id) : IRequest<WorkloadResponse>;
+public record UpdateWorkloadCommand(int WorkloadId, int PersonId, int CustomerId, DateTime Start, DateTime? Stop) : IRequest<WorkloadResponse>;
+public record DeleteWorkloadCommand(int WorkloadId) : IRequest<WorkloadResponse>;
