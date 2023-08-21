@@ -4,7 +4,7 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Services
     .AddTimeReportPersistance(builder.Configuration.GetConnectionString("TimeReportDb")
-    ?? throw new ArgumentException("ConnectionString \"TimeReportDb\" is missing in configuration"))
+        ?? throw new ArgumentException("ConnectionString \"TimeReportDb\" is missing in configuration"))
     .AddMediators()
     .AddEndpointsApiExplorer()
     .AddSwaggerGen();
