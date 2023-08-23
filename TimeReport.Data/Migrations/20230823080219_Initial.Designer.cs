@@ -12,7 +12,7 @@ using TimeReport.Data.Context;
 namespace TimeReport.Data.Migrations
 {
     [DbContext(typeof(TimeReportContext))]
-    [Migration("20230820143532_Initial")]
+    [Migration("20230823080219_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
