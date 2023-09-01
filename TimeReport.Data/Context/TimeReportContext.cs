@@ -1,15 +1,13 @@
 ﻿namespace TimeReport.Data.Context;
 
-using System;
 using System.Reflection;
 
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.Extensions.Logging;
 
-using TimeReport.Data.Configuration;
 using TimeReport.Data.Interfaces;
 using TimeReport.Model;
+
+
 
 public sealed class TimeReportContext : DbContext, ITimeReportContext
 {
@@ -23,9 +21,9 @@ public sealed class TimeReportContext : DbContext, ITimeReportContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder
+        _ = modelBuilder
             .ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-        
+
         //modelBuilder
         //    .ApplyConfiguration(new PersonConfiguration())
         //    .ApplyConfiguration(new CustomerConfiguration())
@@ -40,7 +38,7 @@ public sealed class TimeReportContext : DbContext, ITimeReportContext
 
     internal void UpdateDb()
     {
-        if(Database.GetPendingMigrations().Any())
+        if (Database.GetPendingMigrations().Any())
         {
             Database.Migrate();
         }

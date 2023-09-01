@@ -168,7 +168,7 @@ public sealed class TimeReportService : ITimeReportService
         Workload? workload = context.Workloads
             .Include("Person")
             .Include("Customer")
-            .AsNoTracking()
+            .AsNoTrackingWithIdentityResolution()
             .FirstOrDefault(p => p.Id == workloadId);
 
         return Task.FromResult(workload);
@@ -179,7 +179,7 @@ public sealed class TimeReportService : ITimeReportService
         logger.LogDebug("ReadWorkloads");
 
         IEnumerable<Workload> workloads = context.Workloads
-            .AsNoTracking()
+            .AsNoTrackingWithIdentityResolution()
             .AsEnumerable();
 
         return Task.FromResult(workloads);
